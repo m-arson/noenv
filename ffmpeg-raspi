@@ -1,1 +1,2 @@
 ffmpeg -f v4l2 -c:v mjpeg -i /dev/video0 -c:v libx264 -preset ultrafast -crf 18 -profile:v high -tune zerolatency -qp 0 -r 30 -maxrate 4000k -bufsize 500k -pix_fmt yuv420p -f flv 'rtmp://172.10.16.1:1935/live/stream'
+ffmpeg -f v4l2 -c:v mjpeg -video_size 800x480 -i /dev/video0 -c:v libx264 -preset ultrafast -crf 18 -profile:v high -tune zerolatency -qp 0 -r 30 -maxrate 4000k -bufsize 500k -pix_fmt yuv420p -f flv 'rtmp://172.10.16.1:1935/live/stream'
