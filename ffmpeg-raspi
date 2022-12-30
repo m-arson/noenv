@@ -1,2 +1,4 @@
 ffmpeg -f v4l2 -c:v mjpeg -i /dev/video0 -c:v libx264 -preset ultrafast -crf 18 -profile:v high -tune zerolatency -qp 0 -r 30 -maxrate 4000k -bufsize 500k -pix_fmt yuv420p -f flv 'rtmp://172.10.16.1:1935/live/stream'
 ffmpeg -f v4l2 -c:v mjpeg -video_size 800x480 -i /dev/video0 -c:v libx264 -preset ultrafast -crf 18 -profile:v high -tune zerolatency -qp 0 -r 30 -maxrate 4000k -bufsize 500k -pix_fmt yuv420p -f flv 'rtmp://172.10.16.1:1935/live/stream'
+
+ffmpeg -f video4linux2 -framerate 30 -video_size 1280x720 -i /dev/video0 -c:v libx264 -preset veryfast -crf 8 -b:v 1984k -maxrate 1984k -bufsize 3968k -vf "format=yuv420p" -g 60 -f flv rtmp://havo.co.id:1935/stream/stream
