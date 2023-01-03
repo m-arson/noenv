@@ -1,0 +1,1 @@
+len_of_arr=(`ls -l | awk '{print $5, $7, $9}'  | awk -v f1=0 -v f2=0 -v f3=0 '{if(length($1)>f1){f1=length($1)}; if(length($2)>f2){f2=length($2)}; if(length($3)>f3){f3=length($3)}} END {print f1, f2, f3}'`); ls -l | awk -v f1=${len_of_arr[0]} -v f2=${len_of_arr[1]} -v f3=${len_of_arr[2]} '{printf "%-*s %-*s %-*s\n", f1+3, $5, f2+3, $7, f3+3, $9}'
