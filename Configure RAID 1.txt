@@ -24,7 +24,7 @@
      -----------------------------------------------------------
      > type `w` (to save all configuration)
 
-4. Install mdadm using command `sudo apt-get install mdadm`
+4. Install initramfs tools and mdadm using command `apt-get install initramfs-tools mdadm`
 
 5. To check disk partition using command :
    - `sudo mdadm --examine /dev/sdx`
