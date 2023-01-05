@@ -1,0 +1,75 @@
+# Create RAID 1
+
+1. Prepare 2 or more HDD
+
+2. Wipe all partition on HDD using command :
+   - `sudo parted /dev/sdx mklabel msdos`  --> for MBR, and
+   - `sudo parted /dev/sdx mklabel gt`     --> for GPT (> 2TB Size)
+
+3. Create partition with following command :
+   - `fdisk /dev/sdx`
+     -----------------------------------------------------------
+     > type `n`
+     > type `p`
+     > type `number_of_partition` (Ex: 1)
+     > type `number of start sector` (Enter for default)
+     > type `number of end sector` (Enter for default)
+     -----------------------------------------------------------
+     > type `p` to print information about newly created parition
+     -----------------------------------------------------------
+     > type `t`
+     > type `fd` (Linux RAID autodetect)
+     -----------------------------------------------------------
+     > type `p` to check again
+     -----------------------------------------------------------
+     > type `w` (to save all configuration)
+
+4. Install mdadm using command `sudo apt-get install mdadm`
+
+5. To check disk partition using command :
+   - `sudo mdadm --examine /dev/sdx`
+   
+   If more than one just add the disk label on the end of command, such as:
+   - `sudo mdadm --examine /dev/sdx /dev/sdy`
+
+6. Create RAID Logical Drive using command:
+   - `sudo mdadm --create /dev/md0 --level=mirror --raid-devices=2 /dev/sdx /dev/sdy`
+   
+7. Check RAID status using command `cat /proc/mdstat`, and more detail using command `sudo mdadm --detail /dev/md0`, or on each disk using command `sudo mdadm --examine /dev/sdx1 /dev/sdy1`
+ 
+8. Create File System on RAID 1 Logical Drive using command :
+   - `sudo mkfs.ext4 /dev/md0`, and mount using
+   - `sudo mount /dev/md0 /mnt/raid1`
+   
+9. To check disk size using command:
+   - `df -h /mnt/raid1`
+   
+10. Save RAID 1 Configuration using command:
+   - `sudo mdadm --detail --scan --verbose | sudo tee -a /etc/mdadm/mdadm.conf`
+      on server linux distribution such as CentOS `mdadm.conf` located on `/etc/mdadm.conf`
+   - Run `sudo update-initramfs -u`
+   
+11. To auto mount drive using command :
+   - `sudo nano /etc/fstab`
+   - Adding Line `/dev/md0	/mnt/raid1	ext4	defaults	0	0`
+   - If using GUI, can add to File Manager Sidebar by addding like
+     `/dev/md0	/mnt/raid1	ext4	defaults,x-gvfs-show	0	0`
+     
+# Remove Failed Disk
+
+1. Indication that RAID failed located on `/var/log/messages` or `/var/log/syslog` or you can also run `cat /proc/mdstat` the status with show like `[UU]` if condition is OK, and `[U_]` or `[_U]` or `[__]` if you have degraded RAID1 Array.
+
+2. Remove failed disk using command:
+   - `sudo mdadm --manage /dev/md0 --fail /dev/sdx1`
+   - `sudo mdadm --manage /dev/md0 --remove /dev/sdx1`
+
+3. Shutdown PC and replace the HDD
+
+4. Create exact parition to the new HDD using command:
+   - `sfdisk -d /dev/sdx | sfdisk /dev/sdy`, and check using `fdisk -l`
+
+5. Add new HDD parition to the RAID using command:
+   - `sudo mdadm --manage /dev/md0 --add /dev/sdb1`
+
+6. Check the sync status using command `cat /proc/mdstat`
+
