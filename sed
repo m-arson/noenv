@@ -49,3 +49,7 @@ filename="CRApp6_SystemOut_23.01.24_13.11.08.log"; cat $filename | cut -c57 | gr
 # Don't Know, Maybe useful someday??
 
 cat CRApp6_SystemOut_23.01.24_13.11.08.log | cut -c57 | grep -n E | cut -d":" -f1 | xargs -I {} sed -n {}'p' CRApp6_SystemOut_23.01.24_13.11.08.log | awk '{print $7}' | sed '/^$/d'
+
+# Can be added in the future, previously just using grep 'E' in c57, now grep ' E ' in c56-58
+
+cat CRApp6a_SystemOut_23.01.24_13.11.08.log | cut -c56-58 | grep -n " E " | cut -d":" -f1 | xargs -I {} sed -n {}'p' CRApp6a_SystemOut_23.01.24_13.11.08.log | awk '{print $7}' | sed '/^$/d' | sort | uniq
