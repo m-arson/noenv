@@ -23,3 +23,8 @@ cat CRApp6_SystemOut_23.01.24_13.11.08.log | cut -c57 | grep -n "E" | cut -d":" 
 # Temporary 2
 
 name="CRApp6a_SystemOut_23.01.24_13.11.08.log"; cat $name | cut -c57 | grep -n "E" | cut -d":" -f1 | xargs -I {} sed -n "/^\[/{$(echo {})p}" $name
+
+
+# Final (Maybe?)
+
+sed -n "${n}p;$((n+1)),$ {/^\[/q;p;}" CRApp6_SystemOut_23.01.24_13.11.08.log
