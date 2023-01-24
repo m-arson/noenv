@@ -71,3 +71,6 @@ cat *.log > proc.log; n="proc.log"; cat $n | cut -c56-58 | grep -n " E " | cut -
 
 aln=`find /home/arson/Downloads/WPS_SystemOut_23.01.24_13.11.08/ -type f -name "*.log" | grep "/CR" | xargs cat > /tmp/proc.log; n="/tmp/proc.log"; cat $n | cut -c56-58 | grep -n " E " | cut -d":" -f1 | xargs | sed "s/ /p;/g"`; aln=$aln"p"; sed -n "${aln}" /tmp/proc.log > /tmp/proc1.log; rm -r /tmp/proc.log; awk '{print NR" "$7"_"length($0)}' /tmp/proc1.log | sort -uk2 | awk '{print $1}' | sort -n | awk '{printf "%dp;", $1}' | xargs -I {} sed -n "$(echo {})" /tmp/proc1.log | grep -v BOXMLSerializ; rm -r /tmp/proc1.log
 
+# Clear One
+
+aln=`find /home/arson/Downloads/WPS_SystemOut_23.01.24_13.11.08/ -type f -name "*.log" | grep "/CR" | xargs cat > /tmp/proc.log; n="/tmp/proc.log"; cat $n | cut -c56-58 | grep -n " E " | cut -d":" -f1 | xargs | sed "s/ /p;/g"`; aln=$aln"p"; sed -n "${aln}" /tmp/proc.log > /tmp/proc1.log; rm -r /tmp/proc.log; awk '{print NR" "$7"_"length($0)}' /tmp/proc1.log | sort -uk2 | awk '{print $1}' | sort -n | awk '{printf "%dp;", $1}' | xargs -I {} sed -n "$(echo {})" /tmp/proc1.log | grep -v BOXMLSerializ | awk '{$1="";$2="";$3="";$4=""; print $0"\n"}' | sed "s/    //g"; rm -r /tmp/proc1.log
