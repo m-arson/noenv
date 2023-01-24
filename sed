@@ -58,3 +58,8 @@ cat CRApp6a_SystemOut_23.01.24_13.11.08.log | cut -c56-58 | grep -n " E " | cut 
 # Another Cool One (Filter only one message)
 
 cat CRApp6a_SystemOut_23.01.24_13.11.08.log | grep -n "WTRN0074E:" | awk -F":" '{x=$1; $1=""; y=$0; print x, length(y)}' | sort -urnk2 | awk '{print $1}' | xargs -I {} sed -n {}'p' CRApp6a_SystemOut_23.01.24_13.11.08.log
+
+# Get Only Unique
+
+n="CRApp6a_SystemOut_23.01.24_13.11.08.log"; cat $n | cut -c56-58 | grep -n " E " | cut -d":" -f1 | xargs -I {} env ln={} filename=$n sh -c 'echo "|$ln"; sed -n $ln"p" $filename' | tr '\n' ' ' | tr "|" "\n" | sed "/^$/d" | awk '{x=$1; $1=""; print x, $8"_"length($0)}' | sort -uk2 | awk '{print $1}' | xargs -I {} sed -n {}'p' $n
+
