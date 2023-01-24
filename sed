@@ -41,3 +41,7 @@ dany="Current"; name="Arson"; echo $name | xargs -I {} sh -c 'echo $dany' -- dan
 OR
 
 dany="Current"; name="Arson"; echo $name | xargs -I {} env dany="$dany" sh -c 'echo $dany'
+
+# Final One (Probably??)
+
+filename="CRApp6_SystemOut_23.01.24_13.11.08.log"; cat $filename | cut -c57 | grep -n "E" | cut -d":" -f1 | xargs -I {} env filename="$filename" sh -c 'ln={}; sed -n "${ln}p;$((ln+1)),$ {/^\[/q;p;}" $filename'
