@@ -33,3 +33,11 @@ sed -n "${n}p;$((n+1)),$ {/^\[/q;p;}" CRApp6_SystemOut_23.01.24_13.11.08.log
 # Finallyyyyyyyyy
 
 name="CRApp6_SystemOut_23.01.24_13.11.08.log"; cat $name | cut -c57 | grep -n "E" | cut -d":" -f1 | xargs -I {} sh -c 'num={}; sed -n "${num}p;$((num+1)),$ {/^\[/q;p;}" CRApp6_SystemOut_23.01.24_13.11.08.log'
+
+# More
+
+dany="Current"; name="Arson"; echo $name | xargs -I {} sh -c 'echo $dany' -- dany="$dany"
+
+OR
+
+dany="Current"; name="Arson"; echo $name | xargs -I {} env dany="$dany" sh -c 'echo $dany'
