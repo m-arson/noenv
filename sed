@@ -66,3 +66,8 @@ n="CRApp6a_SystemOut_23.01.24_13.11.08.log"; cat $n | cut -c56-58 | grep -n " E 
 # Combine using cat before find uniq
 
 cat *.log > proc.log; n="proc.log"; cat $n | cut -c56-58 | grep -n " E " | cut -d":" -f1 | xargs -I {} env ln={} filename=$n sh -c 'echo "|$ln"; sed -n $ln"p" $filename' | tr '\n' ' ' | tr "|" "\n" | sed "/^$/d" | awk '{x=$1; $1=""; print x, $8"_"length($0)}' | sort -uk2 | awk '{print $1}' | xargs -I {} sed -n {}'p' $n; rm -r $n
+
+# Mantap Mentong Kabulama
+
+aln=`find /home/arson/Downloads/WPS_SystemOut_23.01.24_13.11.08/ -type f -name "*.log" | grep "/CR" | xargs cat > /tmp/proc.log; n="/tmp/proc.log"; cat $n | cut -c56-58 | grep -n " E " | cut -d":" -f1 | xargs | sed "s/ /p;/g"`; aln=$aln"p"; sed -n "${aln}" /tmp/proc.log > /tmp/proc1.log; rm -r /tmp/proc.log; awk '{print NR" "$7"_"length($0)}' /tmp/proc1.log | sort -uk2 | awk '{print $1}' | sort -n | awk '{printf "%dp;", $1}' | xargs -I {} sed -n "$(echo {})" /tmp/proc1.log | grep -v BOXMLSerializ; rm -r /tmp/proc1.log
+
