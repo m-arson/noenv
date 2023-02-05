@@ -1,0 +1,84 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <FreeRTOS.h>
+#include <task.h>
+#include <queue.h>
+
+const char *ssid = "YourSSID";
+const char *password = "YourPassword";
+const char *url = "http://www.yourwebsite.com/api/data";
+
+QueueHandle_t dataQueue;
+
+void readSensorTask(void *pvParameters) {
+  while (1) {
+    // Read the sensor value
+    int sensorValue = analogRead(A0);
+
+    // Add the sensor value to the queue
+    xQueueSend(dataQueue, &sensorValue, portMAX_DELAY);
+
+    // Wait for 1 second
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+  }
+}
+
+void sendDataTask(void *pvParameters) {
+  while (1) {
+    int sensorValue;
+
+    // Wait for a sensor value to become available in the queue
+    xQueueReceive(dataQueue, &sensorValue, portMAX_DELAY);
+
+    WiFiClient client;
+    HTTPClient http;
+
+    if (WiFi.status() == WL_CONNECTED) {
+      // Send the data to the website
+      http.begin(client, url);
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      int httpCode = http.POST("value=" + String(sensorValue));
+      http.end();
+    }
+  }
+}
+
+void setup() {
+  // Initialize the serial port
+  Serial.begin(115200);
+
+  // Connect to the Wi-Fi network
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Connecting to Wi-Fi...");
+    delay(1000);
+  }
+
+  // Create the queue to store the sensor values
+  dataQueue = xQueueCreate(10, sizeof(int));
+
+  // Create the read sensor task
+  xTaskCreate(
+    readSensorTask,   /* Task function. */
+    "ReadSensorTask", /* Task name. */
+    4096,             /* Stack size. */
+    NULL,             /* Parameter. */
+    1,                /* Task priority. */
+    NULL              /* Task handle. */
+  );
+
+  // Create the send data task
+  xTaskCreate(
+    sendDataTask,   /* Task function. */
+    "SendDataTask", /* Task name. */
+    4096,           /* Stack size. */
+    NULL,           /* Parameter. */
+    1,              /* Task priority. */
+    NULL            /* Task handle. */
+  );
+}
+
+void loop() {
+  // Do nothing
+}
