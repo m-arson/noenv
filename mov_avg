@@ -1,0 +1,42 @@
+const int numReadings = 10;  // number of readings to average
+int readings[numReadings];   // array to store the readings
+int index = 0;                // index for the current reading
+int total = 0;                // running total
+int average = 0;              // average value
+
+void setup() {
+  // initialize serial communication
+  Serial.begin(9600);
+
+  // initialize the readings array to 0
+  for (int i = 0; i < numReadings; i++) {
+    readings[i] = 0;
+  }
+}
+
+void loop() {
+  // get a new reading from the sensor
+  int reading = analogRead(A0);
+
+  // subtract the last reading and add the new reading
+  total = total - readings[index];
+  total = total + reading;
+
+  // store the new reading in the readings array
+  readings[index] = reading;
+
+  // calculate the average value
+  average = total / numReadings;
+
+  // increment the index and wrap around if necessary
+  index = index + 1;
+  if (index >= numReadings) {
+    index = 0;
+  }
+
+  // send the average value to the serial port
+  Serial.println(average);
+
+  // wait a bit before taking another reading
+  delay(100);
+}
