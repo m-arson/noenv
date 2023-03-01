@@ -1,0 +1,41 @@
+import subprocess
+import requests as req
+import json
+from bs4 import BeautifulSoup as bs
+
+url="https://chromedriver.storage.googleapis.com"
+
+p = subprocess.Popen(''' powershell -Command \"$(Get-Package -Name \\\"Google Chrome\\\").Version\" ''', shell=True, stdout=subprocess.PIPE)
+out, err = p.communicate()
+
+version = out.decode("UTF-8").strip()
+version = version.split(".")
+version = f"{version[0]}.{version[1]}.{version[2]}"
+
+print("Current Version :", version)
+
+r = req.get(url)
+xml_data = r.content.decode("UTF-8").strip()
+
+bs_data = bs(xml_data, "xml")
+b_contents = bs_data.find_all("Contents")
+
+zip_version = ""
+
+for content in b_contents:
+	val = content.find("Key").text
+	if version in val:
+		if "win" in val:
+			zip_version = val.strip()
+
+print("Available Version :", zip_version.split("/")[0])
+
+zipfile = f"{url}/{zip_version}"
+
+print("Downloading file...")
+
+dw_zip = req.get(zipfile)
+with open("chromedriver.zip", "wb") as f:
+	f.write(dw_zip.content)
+
+print("Done...")
