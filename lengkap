@@ -7,7 +7,7 @@ imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere
 
 # Installing
 
-imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,com.ibm.sdk.6_64bit -acceptLicense -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8 -showVerboseProgress -log silentinstall.log
+imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,com.ibm.sdk.6_64bit -acceptLicense -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8 -showVerboseProgress -log /var/log/installbaw.log
 
 
 imcl listInstalledPackages | awk '{print $2}' | xargs imcl uninstall -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8 -showVerboseProgress
@@ -25,5 +25,18 @@ imcl listInstalledPackages | awk '{print $2}' | xargs imcl uninstall -sharedReso
 ./imcl install com.ibm.cic.agent -acceptLicense -sP -installationDirectory /opt/soa/InstallationManager/eclipse -log /var/log/installlog.log -preferences com.ibm.cic.common.core.preferences.preserveDownloadedArtifacts=false
 
 
-./installc -log <log_file_path> -acceptLicense -s -installationDirectory <installation_directory>
+
+## Final
+
+sudo ./installc -log /var/log/install-imcl.log -acceptLicense -s -installationDirectory /opt/soa/InstallationManager/eclipse
+
+# Embbed sample
+
+sudo ./imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,samples,com.ibm.sdk.6_64bit -acceptLicense -installationDirectory /opt/soa/bpm -sharedResourcesDirectory /opt/soa/IMShared -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8,user.locale=en_US -showVerboseProgress -log /var/log/silentinstall.log
+
+# Without sample
+
+sudo ./installc -log /var/log/install-imcl.log -acceptLicense -s -installationDirectory /opt/soa/InstallationManager/eclipse
+
+sudo ./imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,com.ibm.sdk.6_64bit -acceptLicense -installationDirectory /opt/soa/bpm -sharedResourcesDirectory /opt/soa/IMShared -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8,user.locale=en_US -showVerboseProgress -log /var/log/silentinstall.log
 
