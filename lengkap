@@ -1,0 +1,29 @@
+sudo ./imcl install com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,com.ibm.sdk.8_64bit -acceptLicense -installationDirectory /opt/soa/bpm -sharedResourcesDirectory /opt/soa/IMShared -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8,user.locale=en_US -showVerboseProgress -log silentinstall.log
+
+
+
+imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,samples,com.ibm.sdk.6_64bit com.ibm.ws.DB2EXP.linuxia64 -acceptLicense -installationDirectory /opt/IBM/BPM -repositories /usr/tmp/BPM/repository/repos_64bit,/usr/tmp/BPMCF -properties user.wasjava=java8,user.db2.instance.username=bpmadmin,user.db2.instance.password="Vvrs88V/a9BUdxwodz0nUg==" -showVerboseProgress -log silentinstall.log
+
+
+# Installing
+
+imcl install com.ibm.bpm.ADV.v85,WorkflowEnterprise.Production com.ibm.websphere.ND.v85,core.feature,ejbdeploy,thinclient,embeddablecontainer,com.ibm.sdk.6_64bit -acceptLicense -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8 -showVerboseProgress -log silentinstall.log
+
+
+imcl listInstalledPackages | awk '{print $2}' | xargs imcl uninstall -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit -properties user.wasjava=java8 -showVerboseProgress
+
+
+
+# Uninstall
+
+
+./imcl listInstalledPackages -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit | awk '{print $2}' | xargs ./imcl uninstall -sharedResourcesDirectory /opt/soa/IMShared -installationDirectory /opt/soa/bpm -repositories /opt/IBM/Installer/repository/repos_64bit -showVerboseProgress
+
+
+# imcl
+
+./imcl install com.ibm.cic.agent -acceptLicense -sP -installationDirectory /opt/soa/InstallationManager/eclipse -log /var/log/installlog.log -preferences com.ibm.cic.common.core.preferences.preserveDownloadedArtifacts=false
+
+
+./installc -log <log_file_path> -acceptLicense -s -installationDirectory <installation_directory>
+
