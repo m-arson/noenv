@@ -1,0 +1,30 @@
+#!/usr/bin/python
+
+from ftplib import FTP
+from io import BytesIO
+
+ftp = FTP("10.70.152.135")
+ftp.login(user="itsmuser", passwd="bni1234/")
+ftp.cwd("BACKUP-DATA-SOA/REPORTS/")
+
+### Read Content from a file
+
+#rc = BytesIO()
+
+#ftp.retrbinary('RETR ./TPS/last_update.log', rc.write)
+#
+#print(rc.getvalue().decode())
+
+### Append Content to a file
+
+#data = 'Hello, World!\n'.encode('utf-8')
+#data = BytesIO(data)
+
+#ftp.storbinary('APPE ./TPS/testing.txt', data, 1024)
+
+### Create a file
+
+empty_file = BytesIO(b'')
+ftp.storbinary('STOR ./TPS/empty_file.txt', empty_file)
+
+ftp.quit()
